@@ -26,6 +26,12 @@ systemctl enable cockpit.socket && \
 systemctl enable lorax-composer && \
 echo "root:ChangeThisLamePassword" | chpasswd
 
+# welder-web is not setup to build from COPR yet, install it directly
+RUN rpm -i https://bcl.fedorapeople.org/welder-web/welder-web-0-0.noarch.rpm
+
+# Include some example recipes
+COPY *toml /var/lib/lorax-composer/recipes/
+
 EXPOSE 9090
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
