@@ -14,11 +14,16 @@ rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;
 
-
+# lorax-composer depends on a couple of EPEL packages, so install the EPEL repo
+RUN rpm -i https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 # Install Cockpit, lorax-composer, and welder-web
-RUN yum -y install cockpit less; yum clean all; \
-systemctl enable cockpit.socket; \
+RUN yum -y install yum-plugin-copr && \
+yum -y copr enable @weldr/lorax-composer && \
+yum -y install cockpit less lorax lorax-composer && \
+yum clean all && \
+systemctl enable cockpit.socket && \
+systemctl enable lorax-composer && \
 echo "root:ChangeThisLamePassword" | chpasswd
 
 EXPOSE 9090
